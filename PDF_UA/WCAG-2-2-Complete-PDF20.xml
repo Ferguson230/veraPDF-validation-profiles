@@ -209,10 +209,10 @@
         </rule>
         <rule object="PDLinkAnnot" tags="major,machine,annotation,structure">
             <id specification="ISO_14289_2" clause="8.2.5.20" testNumber="1"/>
-            <description>A link annotation and its associated content shall be enclosed in either a Link or Reference structure element</description>
+            <description>When used as real content, a link annotation and its associated content shall be enclosed in either a Link or Reference structure element</description>
             <test>structParentStandardType == 'Link' || structParentStandardType == 'Reference' || structParentType == null || isArtifact == true</test>
             <error>
-                <message>A Link annotation is an Artifact or is nested within %1 tag (standard type = %2) instead of Link or Reference</message>
+                <message>A Link annotation is nested within %1 tag (standard type = %2) instead of Link or Reference</message>
                 <arguments>
                     <argument>structParentType</argument>
                     <argument>structParentStandardType</argument>
@@ -225,11 +225,13 @@
             <description>Link annotations that target different locations shall be in separate Link or Reference structure elements</description>
             <test>differentTargetAnnotObjectKey == null</test>
             <error>
-                <message>Struct element %1 contains Link annotations %1 and %2 that target different locations</message>
+                <message>Struct element %1 contains Link annotations %2 and %3 that target different locations (%4 and %5 respectively)</message>
                 <arguments>
                     <argument>structParentObjectKey</argument>
                     <argument>objectKey</argument>
                     <argument>differentTargetAnnotObjectKey</argument>
+                    <argument>structDestinationKey</argument>
+                    <argument>differentTargetAnnotDestinationKey</argument>
                 </arguments>
             </error>
             <references/>
@@ -729,10 +731,10 @@
         </rule>
         <rule object="PDMarkupAnnot" tags="major,machine,annotation,structure">
             <id specification="ISO_14289_2" clause="8.9.2.3" testNumber="1"/>
-            <description>Markup annotations shall be enclosed within Annot structure elements</description>
+            <description>When used as real content, Markup annotations shall be enclosed within Annot structure elements</description>
             <test>structParentStandardType == 'Annot' || structParentType == null || isArtifact == true</test>
             <error>
-                <message>A Markup annotation is an Artifact or is nested within %1 tag (standard type = %2) instead of Annot</message>
+                <message>A Markup annotation is nested within %1 tag (standard type = %2) instead of Annot</message>
                 <arguments>
                     <argument>structParentType</argument>
                     <argument>structParentStandardType</argument>
@@ -1113,49 +1115,15 @@
             </error>
             <references/>
         </rule>
-        <rule object="PDPage" tags="minor,machine,page">
-            <id specification="WCAG_2_2" clause="1.3.4" testNumber="1"/>
-            <description>Pages shall have the same orientation</description>
-            <test>orientation == 'Square' || gMostCommonPageOrientation == orientation</test>
-            <error>
-                <message>Page %1 has different orientation</message>
-                <arguments>
-                    <argument>pageNumber + 1</argument>
-                </arguments>
-            </error>
-            <references/>
-        </rule>
         <rule object="SATextChunk" tags="major,machine,contrast">
             <id specification="WCAG_2_2" clause="1.4.3" testNumber="1"/>
             <description>The visual presentation of text and images of text has a contrast ratio of at least 4.5:1. Large-scale text and images of large-scale text have a contrast ratio of at least 3:1</description>
-            <test>textSize &lt; 4.5 || ((textSize &gt;= 18.0 || (textSize &gt;= 14.0 &amp;&amp; textWeight &gt;= 700.0)) ? (contrastRatio &gt;= 3) : (contrastRatio &gt;= 4.5)) || parentsStandardTypes.split('&amp;').filter(elem =&gt; elem == 'Figure').length &gt; 0</test>
+            <test>((textSize &gt;= 18.0 || (textSize &gt;= 14.0 &amp;&amp; textWeight &gt;= 700.0)) ? (contrastRatio &gt;= 3) : (contrastRatio &gt;= 4.5)) || parentsStandardTypes.split('&amp;').filter(elem =&gt; elem == 'Figure').length &gt; 0</test>
             <error>
                 <message>contrastRatio = %1</message>
                 <arguments>
                     <argument>contrastRatio</argument>
                 </arguments>
-            </error>
-            <references/>
-        </rule>
-        <rule object="SATextChunk" tags="major,machine,text">
-            <id specification="WCAG_2_2" clause="1.4.4" testNumber="1"/>
-            <description>Font size is too small: text may not be resized without assistive technology up to 200 percent without loss of content or functionality</description>
-            <test>textSize &gt;= 4.5 || isWhiteSpaceChunk == true || parentsStandardTypes.split('&amp;').filter(elem =&gt; elem == 'Figure').length &gt; 0</test>
-            <error>
-                <message>textSize = %1</message>
-                <arguments>
-                    <argument>textSize</argument>
-                </arguments>
-            </error>
-            <references/>
-        </rule>
-        <rule object="PDFont" tags="cosmetic,human,text">
-            <id specification="WCAG_2_2" clause="1.4.8" testNumber="1"/>
-            <description>Document should not contain illegible font</description>
-            <test>fontName != null &amp;&amp; fontName.indexOf('AdobeDevanagari') == -1 &amp;&amp; fontName.indexOf('AgencyFB') == -1 &amp;&amp; fontName.indexOf('BlackadderITC') == -1 &amp;&amp; fontName.indexOf('BodoniMTPosterCompressed') == -1 &amp;&amp; fontName.indexOf('BradleyHandITC') == -1 &amp;&amp; fontName.indexOf('BrushScriptMT') == -1 &amp;&amp; fontName.indexOf('Chiller') == -1 &amp;&amp; fontName.indexOf('ColonnaMT') == -1 &amp;&amp; fontName.indexOf('CurlzMT') == -1 &amp;&amp; fontName.indexOf('EdwardianScriptITC') == -1 &amp;&amp; fontName.indexOf('ESRIArcGISTDN') == -1 &amp;&amp; fontName.indexOf('FreestyleScript') == -1 &amp;&amp; fontName.indexOf('FrenchScriptMT') == -1 &amp;&amp; fontName.indexOf('Gabriola') == -1 &amp;&amp; fontName.indexOf('Gigi') == -1 &amp;&amp; fontName.indexOf('GillSansMT-ExtraCondensedBold') == -1 &amp;&amp; fontName.indexOf('HarlowSolidItalic') == -1 &amp;&amp; fontName.indexOf('Harrington') == -1 &amp;&amp; fontName.indexOf('InformalRoman') == -1 &amp;&amp; fontName.indexOf('Jokerman') == -1 &amp;&amp; fontName.indexOf('FrenchScriptMT') == -1 &amp;&amp; fontName.indexOf('Gabriola') == -1 &amp;&amp; fontName.indexOf('JuiceITC') == -1 &amp;&amp; fontName.indexOf('KunstlerScript') == -1 &amp;&amp; fontName.indexOf('Magneto') == -1 &amp;&amp; fontName.indexOf('MaturaMTScriptCapitals') == -1 &amp;&amp; fontName.indexOf('MicrosoftUighur') == -1 &amp;&amp; fontName.indexOf('Mistral') == -1 &amp;&amp; fontName.indexOf('OldEnglishTextMT') == -1 &amp;&amp; fontName.indexOf('Onyx') == -1 &amp;&amp; fontName.indexOf('PalaceScriptMT') == -1 &amp;&amp; fontName.indexOf('Parchment') == -1 &amp;&amp; fontName.indexOf('Playbill') == -1 &amp;&amp; fontName.indexOf('Pristina') == -1 &amp;&amp; fontName.indexOf('RageItalic') == -1 &amp;&amp; fontName.indexOf('Ravie') == -1 &amp;&amp; fontName.indexOf('SegoeScript') == -1 &amp;&amp; fontName.indexOf('ShowcardGothic') == -1 &amp;&amp; fontName.indexOf('SnapITC') == -1 &amp;&amp; fontName.indexOf('Vivaldi') == -1 &amp;&amp; fontName.indexOf('VladimirScript') == -1 &amp;&amp; (fontName.indexOf('HarlowSolid') == -1 || isItalic != true)</test>
-            <error>
-                <message>Document contains illegible font</message>
-                <arguments/>
             </error>
             <references/>
         </rule>
@@ -1834,10 +1802,6 @@
         <variable name="gContainsConfigs" object="PDOCProperties">
             <defaultValue>false</defaultValue>
             <value>containsConfigs</value>
-        </variable>
-        <variable name="gMostCommonPageOrientation" object="PDDocument">
-            <defaultValue>null</defaultValue>
-            <value>mostCommonOrientation</value>
         </variable>
     </variables>
 </profile>

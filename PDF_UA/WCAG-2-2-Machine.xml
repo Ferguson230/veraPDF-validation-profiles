@@ -181,7 +181,7 @@
             <description>Table element may contain only TR, THead, TBody, TFoot and Caption elements</description>
             <test>kidsStandardTypes.split('&amp;').filter(elem =&gt; elem != 'TR' &amp;&amp; elem != 'THead' &amp;&amp; elem != 'TBody' &amp;&amp; elem != 'TFoot' &amp;&amp; elem != 'Caption').length == 0 || kidsStandardTypes == ''</test>
             <error>
-                <message>Table element contains %1 element(s) instead of TR, THead, TBode, TFoot or Caption</message>
+                <message>Table element contains %1 element(s) instead of TR, THead, TBody, TFoot or Caption</message>
                 <arguments>
                     <argument>kidsStandardTypes.split('&amp;').filter(elem =&gt; elem != 'TR' &amp;&amp; elem != 'THead'
                         &amp;&amp; elem != 'TBody' &amp;&amp; elem != 'TFoot' &amp;&amp; elem != 'Caption').toString()</argument>
@@ -777,7 +777,7 @@
             <description>All documents shall be either strongly or weakly structured, but not both</description>
             <test>usesHn == false</test>
             <error>
-                <message>Document uses both H and H# tags</message>
+                <message>Document uses H tag in presence of Hn tags</message>
                 <arguments/>
             </error>
             <references/>
@@ -787,7 +787,7 @@
             <description>All documents shall be either strongly or weakly structured, but not both</description>
             <test>usesH == false</test>
             <error>
-                <message>Document uses both H and H# tags</message>
+                <message>Document uses Hn tags in presence of H tags</message>
                 <arguments/>
             </error>
             <references/>
@@ -939,7 +939,7 @@
         <rule object="PDWidgetAnnot" tags="major,machine,annotation,alt-text">
             <id specification="ISO_14289_1" clause="7.18.1" testNumber="3"/>
             <description>A form field shall have a TU key present or all its Widget annotations shall have alternative descriptions (in the form of an Alt entry in the enclosing structure elements)</description>
-            <test>isOutsideCropBox == true || (F &amp; 2) == 2 || (TU != null &amp;&amp; TU != '') || (Alt != null &amp;&amp; Alt != '')</test>
+            <test>isOutsideCropBox == true || (F &amp; 2) == 2 || isFieldWidget == false || (TU != null &amp;&amp; TU != '') || (Alt != null &amp;&amp; Alt != '')</test>
             <error>
                 <message>A form field neither has TU key nor its Widget annotations have alternative descriptions (in the form of an Alt entry in the enclosing structure element)</message>
                 <arguments/>
@@ -1280,38 +1280,14 @@
             </error>
             <references/>
         </rule>
-        <rule object="PDPage" tags="minor,machine,page">
-            <id specification="WCAG_2_2" clause="1.3.4" testNumber="1"/>
-            <description>Pages shall have the same orientation</description>
-            <test>orientation == 'Square' || gMostCommonPageOrientation == orientation</test>
-            <error>
-                <message>Page %1 has different orientation</message>
-                <arguments>
-                    <argument>pageNumber + 1</argument>
-                </arguments>
-            </error>
-            <references/>
-        </rule>
         <rule object="SATextChunk" tags="major,machine,contrast">
             <id specification="WCAG_2_2" clause="1.4.3" testNumber="1"/>
             <description>The visual presentation of text and images of text has a contrast ratio of at least 4.5:1. Large-scale text and images of large-scale text have a contrast ratio of at least 3:1</description>
-            <test>textSize &lt; 4.5 || ((textSize &gt;= 18.0 || (textSize &gt;= 14.0 &amp;&amp; textWeight &gt;= 700.0)) ? (contrastRatio &gt;= 3) : (contrastRatio &gt;= 4.5)) || parentsStandardTypes.split('&amp;').filter(elem =&gt; elem == 'Figure').length &gt; 0</test>
+            <test>((textSize &gt;= 18.0 || (textSize &gt;= 14.0 &amp;&amp; textWeight &gt;= 700.0)) ? (contrastRatio &gt;= 3) : (contrastRatio &gt;= 4.5)) || parentsStandardTypes.split('&amp;').filter(elem =&gt; elem == 'Figure').length &gt; 0</test>
             <error>
                 <message>contrastRatio = %1</message>
                 <arguments>
                     <argument>contrastRatio</argument>
-                </arguments>
-            </error>
-            <references/>
-        </rule>
-        <rule object="SATextChunk" tags="major,machine,text">
-            <id specification="WCAG_2_2" clause="1.4.4" testNumber="1"/>
-            <description>Font size is too small: text may not be resized without assistive technology up to 200 percent without loss of content or functionality</description>
-            <test>textSize &gt;= 4.5 || isWhiteSpaceChunk == true || parentsStandardTypes.split('&amp;').filter(elem =&gt; elem == 'Figure').length &gt; 0</test>
-            <error>
-                <message>textSize = %1</message>
-                <arguments>
-                    <argument>textSize</argument>
                 </arguments>
             </error>
             <references/>
@@ -1411,10 +1387,6 @@
         <variable name="gContainsCatalogLang" object="PDDocument">
             <defaultValue>false</defaultValue>
             <value>containsLang</value>
-        </variable>
-        <variable name="gMostCommonPageOrientation" object="PDDocument">
-            <defaultValue>null</defaultValue>
-            <value>mostCommonOrientation</value>
         </variable>
         <variable name="usesH" object="SAH">
             <defaultValue>false</defaultValue>

@@ -251,7 +251,7 @@
             <description>Table element may contain only TR, THead, TBody, TFoot and Caption elements</description>
             <test>kidsStandardTypes.split('&amp;').filter(elem =&gt; elem != 'TR' &amp;&amp; elem != 'THead' &amp;&amp; elem != 'TBody' &amp;&amp; elem != 'TFoot' &amp;&amp; elem != 'Caption').length == 0 || kidsStandardTypes == ''</test>
             <error>
-                <message>Table element contains %1 element(s) instead of TR, THead, TBode, TFoot or Caption</message>
+                <message>Table element contains %1 element(s) instead of TR, THead, TBody, TFoot or Caption</message>
                 <arguments>
                     <argument>kidsStandardTypes.split('&amp;').filter(elem =&gt; elem != 'TR' &amp;&amp; elem != 'THead'
                         &amp;&amp; elem != 'TBody' &amp;&amp; elem != 'TFoot' &amp;&amp; elem != 'Caption').toString()</argument>
@@ -803,7 +803,7 @@
             <description>All documents shall be either strongly or weakly structured, but not both</description>
             <test>usesHn == false</test>
             <error>
-                <message>Document uses both H and H# tags</message>
+                <message>Document uses H tag in presence of Hn tags</message>
                 <arguments/>
             </error>
             <references/>
@@ -813,7 +813,7 @@
             <description>All documents shall be either strongly or weakly structured, but not both</description>
             <test>usesH == false</test>
             <error>
-                <message>Document uses both H and H# tags</message>
+                <message>Document uses Hn tags in presence of H tags</message>
                 <arguments/>
             </error>
             <references/>
@@ -965,7 +965,7 @@
         <rule object="PDWidgetAnnot" tags="annotation,alt-text">
             <id specification="ISO_14289_1" clause="7.18.1" testNumber="3"/>
             <description>A form field shall have a TU key present or all its Widget annotations shall have alternative descriptions (in the form of an Alt entry in the enclosing structure elements)</description>
-            <test>isOutsideCropBox == true || (F &amp; 2) == 2 || (TU != null &amp;&amp; TU != '') || (Alt != null &amp;&amp; Alt != '')</test>
+            <test>isOutsideCropBox == true || (F &amp; 2) == 2 || isFieldWidget == false || (TU != null &amp;&amp; TU != '') || (Alt != null &amp;&amp; Alt != '')</test>
             <error>
                 <message>A form field neither has TU key nor its Widget annotations have alternative descriptions (in the form of an Alt entry in the enclosing structure element)</message>
                 <arguments/>
